@@ -15,6 +15,9 @@ import AVFoundation
 
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
+    
+    
+    var recordTime: Double = 5.0;
     var cameraView: UIView!
     
     var captureSession = AVCaptureSession()
@@ -64,8 +67,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                         movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
                         
                         //
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            print("stopping")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + self.recordTime) {
+                            print("stopping: waited \(self.recordTime)")
                             self.movieOutput.stopRecording()
                         }
                         
@@ -85,7 +88,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("FINISHED \(error)")
         // save video to camera roll
-        
+ 
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error == nil {
