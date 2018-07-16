@@ -2,7 +2,7 @@
 //  prep.swift
 //  TU20 App
 //
-//  Created by Alexsia Louizos on 2018-07-16.
+//  Created by Dean Louizos on 2018-07-16.
 //  Copyright © 2018 Dean Louizos. All rights reserved.
 //
 
@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 class Prep: UIViewController {
-    var timer = UITextField()
+    var timeSelector = UISlider()
+    var time = UILabel()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,40 +41,48 @@ class Prep: UIViewController {
         go.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 35)
         go.addTarget(self, action: #selector(Prep.goClicked), for: .touchUpInside)
         view.addSubview(go)
-        
+       
         let timerBackground = UIView()
         timerBackground.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        timerBackground.frame.size = CGSize(width: screenW-170, height: 100)
+        timerBackground.frame.size = CGSize(width: screenW/2, height: 100)
         timerBackground.center = self.view.center
         view.addSubview(timerBackground)
         
-        self.timer.keyboardType = UIKeyboardType.numberPad
-        self.timer.frame.size = CGSize(width: screenW-200, height: 100)
-        self.timer.center = timerBackground.center
-        self.timer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        self.timer.font = UIFont(name: "Helvetica-Bold", size: 60)
-        self.timer.textAlignment = .center
-        view.addSubview(self.timer)
+        timeSelector.maximumValue = 60
+        timeSelector.minimumValue = 0
+        timeSelector.frame.size.width = screenW-80
+        timeSelector.center = self.view.center
+        timeSelector.minimumTrackTintColor = #colorLiteral(red: 0.1882352941, green: 0.462745098, blue: 0.7098039216, alpha: 1)
+        timeSelector.addTarget(self, action: #selector(Prep.sliderChange), for: .valueChanged)
+        view.addSubview(timeSelector)
+        
+        time.text = "\(Int(timeSelector.value))"
+        time.frame.size = CGSize(width: 200, height: 200)
+        time.center = CGPoint(x: 200, y: 200)
+        time.font = UIFont(name: "Helvetica", size: 30)
+        time.textColor = #colorLiteral(red: 0.4392156899, green: 0.01176470611, blue: 0.1921568662, alpha: 1)
+        time.textAlignment = .center
+        view.addSubview(time)
+        
+            
+        
+        
+    }
+    @objc func sliderChange() {
+        if Int(timeSelector.value) <= 30 {
+            time.text = "\((Int(timeSelector.value)/6)+5)"
+        } else {
+            time.text = "\((5*Int(timeSelector.value)/3)-40)"
+        }
     }
     @objc func backClicked() {
         dismiss(animated: true)
+        
     }
     @objc func goClicked() {
-        if Int(self.timer.text!)! > 60 {
-            let error = UILabel()
-            error.text = "The entered number is too large. The timer cannot exceed 60 seconds."
-            error.frame.size = CGSize(width: self.view.frame.size.width-60, height: 80)
-            error.font = UIFont(name: "Helvetica-Bold", size: 20)
-            error.textAlignment = .center
-            error.center = CGPoint(x: self.view.center.x, y: self.view.center.y+90)
-            error.textColor = #colorLiteral(red: 0.9029565454, green: 0, blue: 0, alpha: 1)
-            error.numberOfLines = 2
-            view.addSubview(error)
-        } else {
-            present(RecordViewController(), animated: true)
-        }
+        let recordTime = Int(time.text!)
     }
 }
 //segmented control for front vs back
-// slider for time
+//slider for time
 //switch for flash
