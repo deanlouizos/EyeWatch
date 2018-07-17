@@ -28,17 +28,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var movieOutput = AVCaptureMovieFileOutput()
     var previewLayer = AVCaptureVideoPreviewLayer()
     
-    var timer = Timer()
+    var textTimer = Timer()
+    var flashTimer = Timer()
     var shouldRecord = false;
     var flashCount = 0.0;
     
     override func viewDidLoad() {
-         timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(RecordViewController.updateTimer)), userInfo: nil, repeats: true)
-        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self,   selector: (#selector(RecordViewController._toggleFlash)), userInfo: nil, repeats: true)
+         textTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController.updateTimer)), userInfo: nil, repeats: true)
+        flashTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController._toggleFlash)), userInfo: nil, repeats: true)
         print("Init Timer")
+        record(forReal: false)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    
+    
+    
+    func record(forReal: Bool) {
         
         
         self.cameraView = self.view
@@ -71,22 +76,32 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                             
                         }
                         
-                        captureSession.addOutput(movieOutput)
                         
-                        captureSession.startRunning()
+
                         
-                        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-                        
-                        let fileUrl = paths[0].appendingPathComponent("output.mov")
-                        try? FileManager.default.removeItem(at: fileUrl)
-                        movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
-                        toggleFlash(devices: devices)
-                        //
-                        DispatchQueue.main.asyncAfter(deadline: .now() + self.recordTime) {
-                            print("stopping: waited \(self.recordTime)")
-                            self.movieOutput.stopRecording()
-                            self.toggleFlash(devices: devices)
+                        if(forReal){
+                            print("for realzz")
+                            
+                            captureSession.addOutput(movieOutput)
+                            
+                            captureSession.startRunning()
+                            
+                            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                            
+                            let fileUrl = paths[0].appendingPathComponent("output.mov")
+                            try? FileManager.default.removeItem(at: fileUrl)
+                            movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
+                            toggleFlash(devices: devices)
+                            //
+                            DispatchQueue.main.asyncAfter(deadline: .now() + self.recordTime) {
+                                print("stopping: waited \(self.recordTime)")
+                                self.movieOutput.stopRecording()
+                                self.toggleFlash(devices: devices)
+                            }
+                            
                         }
+                        
+                       
                         
                     }
                     
@@ -101,9 +116,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
     }
     
-    func record(){
-        
-    }
+
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("FINISHED \(error)")
@@ -121,11 +134,19 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func toggleFlash(devices: [AVCaptureDevice]) {
         for device in devices {
         if (device.hasTorch) {
+            
+            
             try? device.lockForConfiguration()
-            let torchOn = !device.isTorchActive
             try? device.setTorchModeOn(level: 1.0)
-            print("Toggled Flash")
-            device.torchMode = torchOn ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
+            
+            print("Toggling Flash at \(NSDate().timeIntervalSince1970)")
+            if device.isTorchActive {
+                device.torchMode = AVCaptureDevice.TorchMode.off
+            }
+            else{
+                 device.torchMode = AVCaptureDevice.TorchMode.off
+            }
+     
             device.unlockForConfiguration()
         }
         }
@@ -139,13 +160,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
 
     @objc func updateTimer(){
+
         flashCount += 1;
-        print("Incremented Timer")
-        if(flashCount >= recordCountdown){
+        print("Incremented Timer at at \(NSDate().timeIntervalSince1970)")
+        if(flashCount >= recordCountdown + 1 ){
             print("Done countdown")
-            timer.invalidate();
+            textTimer.invalidate();
+            flashTimer.invalidate();
             shouldRecord = true
-            record();
+            record(forReal: true);
         }
     }
     
