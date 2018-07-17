@@ -80,7 +80,10 @@ class Prep: UIViewController {
         
     }
     @objc func goClicked() {
-        let recordTime = Int(time.text!)
+        let recordTime = Double(time.text!)
+        let vc = RecordViewController();
+        vc.recordCountdown = (recordTime)!
+        present(vc,animated: true)
     }
 }
 //segmented control for front vs back
