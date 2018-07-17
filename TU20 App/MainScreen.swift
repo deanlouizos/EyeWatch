@@ -33,7 +33,7 @@ class MainScreen: UIViewController {
         view.addSubview(title)
         
         let start = UIButton()
-        start.frame.size = CGSize(width: screenW-80, height: 60)
+        start.frame.size = CGSize(width: screenW-60, height: 60)
         start.center = CGPoint(x: self.view.center.x, y: self.view.center.y-20)
         start.backgroundColor = #colorLiteral(red: 0.6784313725, green: 0.8862745098, blue: 0.9882352941, alpha: 1)
         start.setTitle("Start", for: .normal)
@@ -42,7 +42,7 @@ class MainScreen: UIViewController {
         view.addSubview(start)
         
         let howTo = UIButton()
-        howTo.frame.size = CGSize(width: screenW-80, height: 60)
+        howTo.frame.size = CGSize(width: screenW-60, height: 60)
         howTo.center = CGPoint(x: self.view.center.x, y: self.view.center.y+60)
         howTo.backgroundColor = #colorLiteral(red: 0.6784313725, green: 0.8862745098, blue: 0.9882352941, alpha: 1)
         howTo.setTitle("How to Use", for: .normal)
