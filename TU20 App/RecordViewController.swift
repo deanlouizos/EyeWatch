@@ -114,6 +114,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         DispatchQueue.main.asyncAfter(deadline: .now() + self.recordTime) {
             print("stopping: waited \(self.recordTime)")
             self.movieOutput.stopRecording()
+            
         }
     }
     
@@ -127,12 +128,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error == nil {
             print("saving")
+            AudioServicesPlaySystemSound (1118);
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
             present(MainScreen(), animated: true)
         }
         
     }
     func toggleFlash(devices: [AVCaptureDevice]) {
+        
         for device in devices {
         if (device.hasTorch) {
             
@@ -171,10 +174,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             countdownLabel.text = "🔴";
             countdownLabel.font = UIFont(name: "Helvetica", size: 25)
             countdownLabel.center = CGPoint(x: view.frame.width*0.10, y: view.frame.width*0.10)
+           // 1117
+            AudioServicesPlaySystemSound (1117);
 
             return;
         }
         countdownLabel.text = String(Int(countdownLabel.text!)!-1);
+        AudioServicesPlaySystemSound (1052);
     }
     
 }
