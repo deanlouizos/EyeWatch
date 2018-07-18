@@ -34,6 +34,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var shouldRecord = false;
     var flashCount = 0;
     
+    var useRearCamera = true;
+    
     override func viewDidLoad() {
          textTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController.updateTimer)), userInfo: nil, repeats: true)
         flashTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController._toggleFlash)), userInfo: nil, repeats: true)
@@ -60,8 +62,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         self.cameraView = self.view
         
         let devices = AVCaptureDevice.devices()
+        let devicePos = useRearCamera ? AVCaptureDevice.Position.back : AVCaptureDevice.Position.front
         for device in devices {
-            if device.position == AVCaptureDevice.Position.back{
+            if device.position == devicePos{
                 
                 
                 do{

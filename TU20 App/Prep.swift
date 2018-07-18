@@ -111,9 +111,11 @@ class Prep: UIViewController {
         
     }
     @objc func goClicked() {
+        let useRearCamera:Bool = (1 == camSelector.selectedSegmentIndex)
         let recordTime = Int(time.text!)
         let vc = RecordViewController();
         vc.recordCountdown = (recordTime)!
+        vc.useRearCamera = useRearCamera
         present(vc,animated: true)
     }
 }
