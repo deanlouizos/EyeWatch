@@ -25,14 +25,22 @@ class ProcessingViewController: UIViewController {
         var r1: CGFloat = 75
         //var r2: CGFloat = 700
         var r2 = (self.view.frame.size.height/2)+20
+         r1 /= 8
+         r2 /= 8
+        
         for n in 1...12 {
             
             var xo = center.x+r1*cos(CGFloat(2*n-1)*CGFloat.pi/12)
             var yo = center.y-r1*sin(CGFloat(2*n-1)*CGFloat.pi/12)
             
-            var x = xo - (xo*xo*xo*xo*r1*r1-r1*r1*r1*r1+yo*yo*r2*r2).squareRoot()/r1
-            var y = (r2*r2-x*x).squareRoot()
+            let pi = CGFloat.pi;
+            let theta = CGFloat(12+(2*n-1))*(pi/12.0)
             
+            var x = r1*cos(theta)+(r1*r1*(1/tan(theta))*(1/tan(theta))-(1/sin(theta))*(1/sin(theta))*r1*r1+r2*r2).squareRoot()/(1/sin(theta))
+            var y = -(r2*r2-x*x).squareRoot()
+            
+            x += self.view.frame.width/2
+            y += self.view.frame.height/2
             
             lines.append(Line(angle: CGFloat(2*n-1)*(CGFloat.pi)/12, length: 500, width: 8, focus: CGPoint(x: x, y: y)))
             view.layer.addSublayer(lines[n-1].layer)

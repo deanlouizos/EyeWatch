@@ -113,6 +113,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         print("Starting to record")
         movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
         //  toggleFlash(devices: devices)
+        
         //
         DispatchQueue.main.asyncAfter(deadline: .now() + self.recordTime) {
             print("stopping: waited \(self.recordTime)")
@@ -133,7 +134,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             print("saving")
             AudioServicesPlaySystemSound (1118);
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-            present(MainScreen(), animated: true)
+            present(ProcessingViewController(), animated: true)
         }
         
     }
