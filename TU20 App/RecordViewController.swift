@@ -16,10 +16,11 @@ import AVFoundation
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
-    
+    var countdownLabel = UILabel()
+
 
     
-    var recordCountdown: Double = 5.0;
+    var recordCountdown: Int = 5;
     var recordTime: Double = 5.0;
     var cameraView: UIView!
     
@@ -31,13 +32,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var textTimer = Timer()
     var flashTimer = Timer()
     var shouldRecord = false;
-    var flashCount = 0.0;
+    var flashCount = 0;
     
     override func viewDidLoad() {
          textTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController.updateTimer)), userInfo: nil, repeats: true)
         flashTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,   selector: (#selector(RecordViewController._toggleFlash)), userInfo: nil, repeats: true)
         print("Init Timer")
         initCamera()
+        
+        countdownLabel.text = String(recordCountdown+1);
+        countdownLabel.frame.size = CGSize(width: 200, height: 200)
+        countdownLabel.center = CGPoint(x: view.frame.width/2, y: view.frame.width/2)
+        countdownLabel.font = UIFont(name: "Helvetica", size: 80)
+        countdownLabel.textColor = #colorLiteral(red: 0.09411764706, green: 0.2470588235, blue: 0.4, alpha: 1)
+        countdownLabel.textAlignment = .center
+        view.addSubview(countdownLabel)
+        
         
     }
     
@@ -126,7 +136,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         for device in devices {
         if (device.hasTorch) {
             
-            
             try? device.lockForConfiguration()
             try? device.setTorchModeOn(level: 1.0)
             
@@ -151,7 +160,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
 
     @objc func updateTimer(){
-
         flashCount += 1;
         print("Incremented Timer at at \(NSDate().timeIntervalSince1970)")
         if(flashCount >= recordCountdown + 1 ){
@@ -160,7 +168,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             flashTimer.invalidate();
             shouldRecord = true
             record();
+            countdownLabel.text = "🔴";
+            countdownLabel.font = UIFont(name: "Helvetica", size: 25)
+            countdownLabel.center = CGPoint(x: view.frame.width*0.10, y: view.frame.width*0.10)
+
+            return;
         }
+        countdownLabel.text = String(Int(countdownLabel.text!)!-1);
     }
     
 }

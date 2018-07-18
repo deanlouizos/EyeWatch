@@ -111,7 +111,7 @@ class Prep: UIViewController {
         
     }
     @objc func goClicked() {
-        let recordTime = Double(time.text!)
+        let recordTime = Int(time.text!)
         let vc = RecordViewController();
         vc.recordCountdown = (recordTime)!
         present(vc,animated: true)
