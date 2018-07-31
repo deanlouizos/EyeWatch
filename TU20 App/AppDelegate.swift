@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  TU20 App
 //
-//  Created by Alexsia Louizos on 2018-07-15.
+//  Created by Dean Louizos on 2018-07-15.
 //  Copyright © 2018 Dean Louizos. All rights reserved.
 //
 

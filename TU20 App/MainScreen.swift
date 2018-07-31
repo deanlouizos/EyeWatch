@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  TU20 App
 //
-//  Created by Alexsia Louizos on 2018-07-15.
+//  Created by Dean Louizos on 2018-07-15.
 //  Copyright © 2018 Dean Louizos. All rights reserved.
 //
 
@@ -14,6 +14,8 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         let screenH = self.view.frame.size.height
         let screenW = self.view.frame.size.width
+        let ratioH = screenH/700
+        let ratioW = screenW/414
         
         let background = UIView()
         background.backgroundColor = #colorLiteral(red: 0.937254902, green: 0.9764705882, blue: 0.9960784314, alpha: 1)
@@ -26,10 +28,10 @@ class MainScreen: UIViewController {
         let title = UILabel()
         title.text = "Eye Watch"
         title.numberOfLines = 2
-        title.font = UIFont(name: "Helvetica-Bold", size: 80)
+        title.font = UIFont(name: "Helvetica-Bold", size: 80*ratioW)
         title.textAlignment = .center
-        title.frame.size = CGSize(width: screenW-80, height: 200)
-        title.center = CGPoint(x: screenW/2, y: 150)
+        title.frame.size = CGSize(width: 334*ratioW, height: 200*ratioH*2)
+        title.center = CGPoint(x: screenW/2, y: 150*ratioH)
         view.addSubview(title)
         
         let start = UIButton()
@@ -38,6 +40,7 @@ class MainScreen: UIViewController {
         start.backgroundColor = #colorLiteral(red: 0.6784313725, green: 0.8862745098, blue: 0.9882352941, alpha: 1)
         start.setTitle("Start", for: .normal)
         start.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 35)
+        start.layer.cornerRadius = 10
         start.addTarget(self, action: #selector(MainScreen.startClicked), for: .touchUpInside)
         view.addSubview(start)
         
@@ -47,8 +50,10 @@ class MainScreen: UIViewController {
         howTo.backgroundColor = #colorLiteral(red: 0.6784313725, green: 0.8862745098, blue: 0.9882352941, alpha: 1)
         howTo.setTitle("How to Use", for: .normal)
         howTo.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 35)
+        howTo.layer.cornerRadius = 10
         howTo.addTarget(self, action: #selector(MainScreen.howToClicked), for: .touchUpInside)
         view.addSubview(howTo)
+
         
         view.layer.addSublayer(eye.irisLayer)
         view.layer.addSublayer(eye.circleLayer)
@@ -59,7 +64,7 @@ class MainScreen: UIViewController {
         present(Prep(), animated: true)
     }
     @objc func howToClicked() {
-        present(ProcessingViewController(), animated: true)
+        present(Instructions(), animated: true)
     }
 
 }
