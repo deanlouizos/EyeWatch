@@ -117,6 +117,6 @@ class Prep: UIViewController {
         
     }
     @objc func goClicked() {
-        present(ProcessingViewController(), animated: false)
+        present(RecordViewController(), animated: false)
     }
 }

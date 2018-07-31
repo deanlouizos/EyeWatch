@@ -62,7 +62,7 @@ class ProcessingViewController: UIViewController {
         g += 1
         if g == 2 {
            present(Results(), animated: true)
-        }
+            }
     }
 
 

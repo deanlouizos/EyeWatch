@@ -64,7 +64,7 @@ class MainScreen: UIViewController {
         present(Prep(), animated: true)
     }
     @objc func howToClicked() {
-        present(Instructions(), animated: true)
+        present(Results(), animated: true)
     }
 
 }
