@@ -139,7 +139,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             print("saving")
             AudioServicesPlaySystemSound (1118);
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-            //present(ProcessingViewController(), animated: true)
+            present(ProcessingViewController(), animated: true)
         }
         
     }
