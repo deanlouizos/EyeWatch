@@ -69,7 +69,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 
                 do{
                     
-                    let input = try AVCaptureDeviceInput(device: device as! AVCaptureDevice)
+                    let input = try AVCaptureDeviceInput(device: device )
                     
                     if captureSession.canAddInput(input){
                         
@@ -77,6 +77,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                         
                         if captureSession.canAddOutput(sessionOutput){
                             
+                            if captureSession.canSetSessionPreset(AVCaptureSession.Preset.high) {
+                            
+                            captureSession.sessionPreset = AVCaptureSession.Preset.high
                             captureSession.addOutput(sessionOutput)
                             
                             previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -87,6 +90,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                             previewLayer.position = CGPoint(x: self.cameraView.frame.width / 2, y: self.cameraView.frame.height / 2)
                             previewLayer.bounds = cameraView.frame
                             
+                            }
                             
                         }
                         captureSession.addOutput(movieOutput)
@@ -106,6 +110,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
     }
     func record(){
+        captureSession.sessionPreset = AVCaptureSession.Preset.low
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     
         let fileUrl = paths[0].appendingPathComponent("output.mov")
@@ -134,7 +139,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             print("saving")
             AudioServicesPlaySystemSound (1118);
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-            present(ProcessingViewController(), animated: true)
+            //present(ProcessingViewController(), animated: true)
         }
         
     }
