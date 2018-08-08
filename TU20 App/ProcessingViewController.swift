@@ -16,6 +16,7 @@ class ProcessingViewController: UIViewController {
     var lines: [Line] = []
     var g = 0
     
+    
     //MARK: VARIABLES
     
     //this is all the videos that are in the photos app
@@ -39,6 +40,7 @@ class ProcessingViewController: UIViewController {
         let background = UIView(frame: self.view.frame)
         background.backgroundColor = #colorLiteral(red: 0.937254902, green: 0.9764705882, blue: 0.9960784314, alpha: 1)
         view.addSubview(background)
+      //  getData()
         
         var timer = Timer()
         timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(ProcessingViewController.ani), userInfo: nil, repeats: true)
@@ -78,21 +80,39 @@ class ProcessingViewController: UIViewController {
         view.addSubview(back)
         view.addSubview(processing)
         
+       // getData();
+        firstAssets =  PHAsset.fetchAssets(with: .video, options: nil)
+        recentVideo = firstAssets.lastObject!
+        print(recentVideo)
+        imageManager.requestAVAsset(forVideo: recentVideo, options: nil) { (recentVideo,_,_) in
+            let vid = recentVideo
+            self.accessFrame(video: vid!, completion: {frames in
+                self.frames = frames
+                
+                
+            })
+        }
+        
+        
+        
+        
+        
     }
     @objc func ani() {
         for n in 1...12 {
             lines[n-1].animate(duration: 3)
         }
         g += 1
-        if g == 2 {
+        if g == 5 {
+            
            present(Results(), animated: true)
             }
     }
     
     //this function accesses all the frames in the video and saves it to the frames global var
-    func accessFrame(video: AVAsset){
+    func accessFrame(video: AVAsset, completion: ([UIImage]) -> ()){
         let reader = try! AVAssetReader(asset: video)
-        
+        var frames: [UIImage] = [UIImage]()
         let videoTrack = video.tracks(withMediaType: AVMediaType.video)[0]
         
         // read video frames as BGRA
@@ -109,9 +129,11 @@ class ProcessingViewController: UIViewController {
                 let ciImage = CIImage(cvPixelBuffer: imageBuffer)
                 let context = CIContext()
                 let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-                self.frames.append(UIImage(cgImage:cgImage!))
+                frames.append(UIImage(cgImage:cgImage!))
             }
         }
+        completion(frames)
+        
     }
     
     //Input: The frames of each video. Output: The frame with the colors in the video
@@ -141,14 +163,20 @@ class ProcessingViewController: UIViewController {
     func getData() {
         firstAssets =  PHAsset.fetchAssets(with: .video, options: nil)
         recentVideo = firstAssets.lastObject!
-        //print(recentVideo)
+        print(recentVideo)
         imageManager.requestAVAsset(forVideo: recentVideo, options: nil) { (recentVideo,_,_) in
             let vid = recentVideo
-            self.accessFrame(video: vid!)
-            for i in 0..<self.frames.count{
-                self.data.append(self.findColors(image: self.frames[i]))
-            }
+        //    self.accessFrame(video: vid!, completion: <#() -> ()#>)
+//            for i in 0..<self.frames.count{
+//                self.data.append(self.findColors(image: self.frames[i]))
+//            }
+        
         }
+    }
+    
+    func isBlack(color: UIColor) -> Bool{
+        let sum = color.ciColor.red + color.ciColor.green + color.ciColor.blue
+        return sum <= 40
     }
     
     /*SAMPLE INTEGRATION (This could be done in the view did load)
